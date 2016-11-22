@@ -9,6 +9,8 @@ import java.sql.*;
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
 import sql.*;
+import gestionrentabilite.*;
+import gestionsessions.*;
 /**
  *
  * @author Administrateur
@@ -24,9 +26,9 @@ public class FenInscription extends javax.swing.JFrame {
     public FenInscription()
     {
         initComponents();
-        jButton1.setVisible(false); // On rend le bouton inscription non visible
-        jTable1.selectAll();
-        jTable1.setDefaultRenderer(Object.class, new Couleur()); // Pour mettre les sessions déficitaires en rouge
+        btnInscription.setVisible(false); // On rend le bouton inscription non visible
+        tInscription.selectAll();
+        tInscription.setDefaultRenderer(Object.class, new Couleur()); // Pour mettre les sessions déficitaires en rouge
     }
 
     /**
@@ -38,14 +40,16 @@ public class FenInscription extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
+        lblTitre = new javax.swing.JLabel();
+        lblMatricule = new javax.swing.JLabel();
+        cbxMatricule = new javax.swing.JComboBox();
+        lblSessionAut = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
+        tInscription = new javax.swing.JTable();
+        btnInscription = new javax.swing.JButton();
+        lblSelection = new javax.swing.JLabel();
+        btnGestionRentabilite = new javax.swing.JButton();
+        btnGestionSession = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Inscription des clients aux différentes sessions");
@@ -59,89 +63,116 @@ public class FenInscription extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 30)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("GESTION DES INSCRIPTIONS");
-        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        lblTitre.setFont(new java.awt.Font("Tahoma", 0, 30)); // NOI18N
+        lblTitre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitre.setText("GESTION DES INSCRIPTIONS");
+        lblTitre.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jLabel2.setText("Matricule : ");
+        lblMatricule.setText("Matricule : ");
 
-        jComboBox1.setName("cmbMat"); // NOI18N
-        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+        cbxMatricule.setName("cmbMat"); // NOI18N
+        cbxMatricule.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jComboBox1ItemStateChanged(evt);
+                cbxMatriculeItemStateChanged(evt);
             }
         });
 
-        jLabel3.setText(" ");
-        jLabel3.setName("lblNomPren"); // NOI18N
+        lblSessionAut.setText(" ");
+        lblSessionAut.setName("lblNomPren"); // NOI18N
 
-        jTable1.setModel(new ModeleJTableListeSession());
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        tInscription.setModel(new ModeleJTableListeSession());
+        tInscription.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                tInscriptionMouseClicked(evt);
             }
         });
-        jTable1.addInputMethodListener(new java.awt.event.InputMethodListener() {
+        tInscription.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                jTable1InputMethodTextChanged(evt);
+                tInscriptionInputMethodTextChanged(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tInscription);
 
-        jButton1.setText("Inscription");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnInscription.setText("Inscription");
+        btnInscription.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnInscriptionActionPerformed(evt);
             }
         });
 
-        jLabel5.setText("Sélection : ");
+        lblSelection.setText("Sélection : ");
+
+        btnGestionRentabilite.setText("Gestion de Rentabilité");
+        btnGestionRentabilite.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGestionRentabiliteActionPerformed(evt);
+            }
+        });
+
+        btnGestionSession.setText("Gestion de Sessions");
+        btnGestionSession.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGestionSessionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(6, 6, 6)
+                .addComponent(lblSessionAut, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(572, 572, 572))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 850, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(6, 6, 6)
+                .addComponent(jScrollPane1))
             .addGroup(layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblMatricule, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cbxMatricule, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(109, 109, 109)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblSelection, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnGestionRentabilite, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(lblTitre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnInscription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnGestionSession, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxMatricule, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblMatricule, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSelection, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblSessionAut, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addComponent(btnInscription, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnGestionRentabilite)
+                .addGap(18, 18, 18)
+                .addComponent(btnGestionSession)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -157,10 +188,10 @@ public class FenInscription extends javax.swing.JFrame {
                 String req = "select distinct c.id from client c, plan_formation p "
                  + "where c.id = p.id order by c.id";
                 ResultSet rs = GestionBdd.envoiRequeteLMD(stmt1,req);
-                jComboBox1.addItem("---");
+                cbxMatricule.addItem("---");
                 while (rs.next())
                 {
-                    jComboBox1.addItem(rs.getString(1));
+                    cbxMatricule.addItem(rs.getString(1));
                 }
             }
             catch (SQLException se)
@@ -169,45 +200,57 @@ public class FenInscription extends javax.swing.JFrame {
             }
     }//GEN-LAST:event_formWindowOpened
 
-    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+    private void cbxMatriculeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxMatriculeItemStateChanged
           // Affichage du nom prénom et de la liste des sessions autorisées
         if (evt.getStateChange() != 1) // Pour éviter le déclenchement sur la création de la fenêtre
         {
             renseigne();
 		
         }
-    }//GEN-LAST:event_jComboBox1ItemStateChanged
+    }//GEN-LAST:event_cbxMatriculeItemStateChanged
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnInscriptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInscriptionActionPerformed
         FenConfirmationInscription f2 = new FenConfirmationInscription(this, true);
-        f2.init(jComboBox1.getSelectedItem(), jTable1.getValueAt(jTable1.getSelectedRow(),0));
+        f2.init(cbxMatricule.getSelectedItem(), tInscription.getValueAt(tInscription.getSelectedRow(),0));
         f2.setSize(400,300);
         f2.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnInscriptionActionPerformed
 
-    private void jTable1InputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTable1InputMethodTextChanged
+    private void tInscriptionInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_tInscriptionInputMethodTextChanged
         //
-    }//GEN-LAST:event_jTable1InputMethodTextChanged
+    }//GEN-LAST:event_tInscriptionInputMethodTextChanged
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        if (jComboBox1.getSelectedIndex()>0 && jTable1.getValueAt(jTable1.getSelectedRow(), 0) != null)
+    private void tInscriptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tInscriptionMouseClicked
+        if (cbxMatricule.getSelectedIndex()>0 && tInscription.getValueAt(tInscription.getSelectedRow(), 0) != null)
         {
-            jLabel5.setText(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
-            int pos1 = jLabel3.getText().indexOf(":");
-            String nomPrenom = jLabel3.getText().substring(pos1 + 1);
-            jButton1.setText("Inscription à la session numéro " + jTable1.getValueAt(jTable1.getSelectedRow(), 0) + " pour " + nomPrenom);
-            jButton1.setVisible(true);
+            lblSelection.setText(tInscription.getValueAt(tInscription.getSelectedRow(), 0).toString());
+            int pos1 = lblSessionAut.getText().indexOf(":");
+            String nomPrenom = lblSessionAut.getText().substring(pos1 + 1);
+            btnInscription.setText("Inscription à la session numéro " + tInscription.getValueAt(tInscription.getSelectedRow(), 0) + " pour " + nomPrenom);
+            btnInscription.setVisible(true);
         }
         else
         {
-            jButton1.setVisible(false);
-            jLabel5.setText("Aucune sélection");
+            btnInscription.setVisible(false);
+            lblSelection.setText("Aucune sélection");
         }
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_tInscriptionMouseClicked
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         renseigne();
     }//GEN-LAST:event_formWindowActivated
+
+    private void btnGestionRentabiliteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionRentabiliteActionPerformed
+        FGestionRentabilite fGestionRentabilite = new FGestionRentabilite();
+        this.setVisible(false);
+        fGestionRentabilite.setVisible(true);
+    }//GEN-LAST:event_btnGestionRentabiliteActionPerformed
+
+    private void btnGestionSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionSessionActionPerformed
+        FGestionSessions fGestionSessions = new FGestionSessions();
+        this.setVisible(false);
+        fGestionSessions.setVisible(true);
+    }//GEN-LAST:event_btnGestionSessionActionPerformed
     private void renseigne()
     {
         try
@@ -215,38 +258,38 @@ public class FenInscription extends javax.swing.JFrame {
         // On vide le JTable
             int j, k;
             String req;
-            for(int i=0;i<jTable1.getRowCount();i++)
+            for(int i=0;i<tInscription.getRowCount();i++)
             {
-                for (j=0;j<jTable1.getColumnCount();j++)
+                for (j=0;j<tInscription.getColumnCount();j++)
 		{
-                    jTable1.setValueAt(null,i,j);
+                    tInscription.setValueAt(null,i,j);
 		}
             }
-            if (jComboBox1.getSelectedIndex()==0 || jComboBox1.getSelectedItem()== null) // Pas de client de choisi
+            if (cbxMatricule.getSelectedIndex()==0 || cbxMatricule.getSelectedItem()== null) // Pas de client de choisi
             {
-                jLabel3.setText("ENSEMBLE DES SESSIONS");
+                lblSessionAut.setText("ENSEMBLE DES SESSIONS");
                 // Toutes les sessions
                 req = "select null, s.id, f.libelle, f.niveau, date_debut, duree, nb_places, nb_inscrits, coutrevient ";
                 req += "from session_formation s, formation f ";
                 req += "where s.formation_id = f.id";
                 // et date supérieure à la date du jour
-                jButton1.setVisible(false); // On rend le bouton inscription non visible
+                btnInscription.setVisible(false); // On rend le bouton inscription non visible
             }
             else
             {
                 // Sélection des sessions "autorisées"
                 req = "select c.nom, s.id, f.libelle, f.niveau, date_debut, duree, nb_places, nb_inscrits, coutrevient ";
                 req += "from session_formation s, client c, plan_formation p, formation f ";
-                req += "where c.id = '" + jComboBox1.getSelectedItem() + "' ";
+                req += "where c.id = '" + cbxMatricule.getSelectedItem() + "' ";
                 req += "and p.client_id = c.id and nb_places > nb_inscrits ";
                 req += "and p.formation_id = f.id ";
                 req += "and s.formation_id = f.id ";
                 // et date supérieure à la date du jour
                 req += "and close = 0 and effectue = 0 and s.id Not In ";
-                req += "(Select session_formation_id From inscription Where id = '" + jComboBox1.getSelectedItem() + "')";
-                if (jTable1.getValueAt(jTable1.getSelectedRow(), 0) != null) //Si la cellule sélectionnée est vide
+                req += "(Select session_formation_id From inscription Where id = '" + cbxMatricule.getSelectedItem() + "')";
+                if (tInscription.getValueAt(tInscription.getSelectedRow(), 0) != null) //Si la cellule sélectionnée est vide
                 {
-                    jButton1.setVisible(false); // On rend le bouton inscription non visible
+                    btnInscription.setVisible(false); // On rend le bouton inscription non visible
                 }
             }
             stmt1 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
@@ -258,9 +301,9 @@ public class FenInscription extends javax.swing.JFrame {
             {
                 while(rs2.next())
                 {
-                    if (k==0 && jComboBox1.getSelectedIndex()!=0)
+                    if (k==0 && cbxMatricule.getSelectedIndex()!=0)
                     {
-                        jLabel3.setText("Sessions autorisées pour : " + rs2.getString(1));
+                        lblSessionAut.setText("Sessions autorisées pour : " + rs2.getString(1));
                     }
                     // On calcule la marge et on renseigne la dernière colonne(7ème) du jTable
                     req = "Select sum(taux_horaire) as revenu_session ";
@@ -270,11 +313,11 @@ public class FenInscription extends javax.swing.JFrame {
                     stmt2 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
                     rs3 = GestionBdd.envoiRequeteLMD(stmt2, req);
                     rs3.first();
-                    jTable1.setValueAt((rs3.getFloat(1) - rs2.getFloat(9)), k, 7);
+                    tInscription.setValueAt((rs3.getFloat(1) - rs2.getFloat(9)), k, 7);
                     // On renseigne le reste du jTable
-                    for (j=0;j<(jTable1.getColumnCount() -1);j++)
+                    for (j=0;j<(tInscription.getColumnCount() -1);j++)
                     {
-                        jTable1.setValueAt(rs2.getObject(j+2), k, j);
+                        tInscription.setValueAt(rs2.getObject(j+2), k, j);
                     }
                     k++;
                 }
@@ -295,13 +338,15 @@ public class FenInscription extends javax.swing.JFrame {
      */
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JButton btnGestionRentabilite;
+    private javax.swing.JButton btnGestionSession;
+    private javax.swing.JButton btnInscription;
+    private javax.swing.JComboBox cbxMatricule;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lblMatricule;
+    private javax.swing.JLabel lblSelection;
+    private javax.swing.JLabel lblSessionAut;
+    private javax.swing.JLabel lblTitre;
+    private javax.swing.JTable tInscription;
     // End of variables declaration//GEN-END:variables
 }

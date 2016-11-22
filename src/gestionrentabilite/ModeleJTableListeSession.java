@@ -2,12 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package gestioninscription;
+package gestionrentabilite;
 
 /**
  *
  * @author Administrateur
  */
+import gestioninscription.*;
 import javax.swing.table.AbstractTableModel;
 
 public class  ModeleJTableListeSession extends AbstractTableModel
