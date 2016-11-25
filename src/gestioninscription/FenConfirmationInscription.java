@@ -2,112 +2,109 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package gestioninscription;
 import sql.GestionBdd;
 import java.sql.*;
 import java.util.GregorianCalendar;
+
 /**
  *
  * @author Administrateur
  */
-public class FenConfirmationInscription extends javax.swing.JDialog {
-    Statement stmt1 = null;
-    Statement stmt2 = null;
-    String matricule;
-    int numero;
-    
-    /**
-     * Creates new form FenConfirmationInscription2
-     */
-    public FenConfirmationInscription(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-    }
-    
-    public void init(Object matClient, Object numSession)
-    {
-        matricule = (String)matClient;
-        numero = (Integer)numSession;
-        //jLabel2.setText((String)matClient + " " + (Integer)numSession);
-        stmt1 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor", "localhost", "root", "");
-        stmt2 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor", "localhost", "root", "");
-        String req = "Select libelle, niveau, date_debut, nb_inscrits, nb_places ";
-        req += "From session_formation s, formation f ";
-        req += "Where s.formation_id = f.id ";
-        req += "And s.id = " + numero;
-        ResultSet rsSession = GestionBdd.envoiRequeteLMD(stmt1, req);
-        req = "Select nom ";
-        req += "From client ";
-        req += "Where id = '" + matricule + "'";
-        ResultSet rsClient = GestionBdd.envoiRequeteLMD(stmt2, req);
-        try
-        {
-            rsSession.first();
-            txtLibSession.setText(rsSession.getString("libelle") + " " + rsSession.getString("niveau") );
-            txtDateDeb.setText(rsSession.getString("date_debut"));
-            txtNbPlaces.setText(String.valueOf(rsSession.getInt("nb_places")));
-            txtNbInsc.setText(String.valueOf(rsSession.getInt("nb_inscrits")));
-            rsClient.first();
-            txtNomCli.setText(rsClient.getString("nom"));
-            rsSession.close();
-            rsClient.close();
-            stmt1.close();
-            stmt2.close();
-        }
-        catch(SQLException sqle)
-        {
-            System.out.println("Erreur SQL3 : " + sqle.getMessage());
-        }
-        
-    }
-    
 
-    
-    
+public class FenConfirmationInscription extends javax.swing.JDialog 
+    {
+        Statement stmt1 = null;
+        Statement stmt2 = null;
+        String matricule;
+        int numero;
+        
+        /**
+         * Creates new form FenConfirmationInscription2
+         */
+        
+        public FenConfirmationInscription(java.awt.Frame parent, boolean modal) 
+            {
+                super(parent, modal);
+                initComponents();
+            }
+        public void init(Object matClient, Object numSession)
+            {
+                matricule = (String)matClient;
+                numero = (Integer)numSession;
+                //jLabel2.setText((String)matClient + " " + (Integer)numSession);
+                stmt1 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor", "localhost", "root", "");
+                stmt2 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor", "localhost", "root", "");
+                String req = "Select libelle, niveau, date_debut, nb_inscrits, nb_places ";
+                req += "From session_formation s, formation f ";
+                req += "Where s.formation_id = f.id ";
+                req += "And s.id = " + numero;
+                ResultSet rsSession = GestionBdd.envoiRequeteLMD(stmt1, req);
+                req = "Select nom ";
+                req += "From client ";
+                req += "Where id = '" + matricule + "'";
+                ResultSet rsClient = GestionBdd.envoiRequeteLMD(stmt2, req);
+                try
+                    {
+                        rsSession.first();
+                        tfSession.setText(rsSession.getString("libelle") + " " + rsSession.getString("niveau") );
+                        tfDate.setText(rsSession.getString("date_debut"));
+                        tfNbPlace.setText(String.valueOf(rsSession.getInt("nb_places")));
+                        tfNbreInscrit.setText(String.valueOf(rsSession.getInt("nb_inscrits")));
+                        rsClient.first();
+                        tfNom.setText(rsClient.getString("nom"));
+                        rsSession.close();
+                        rsClient.close();
+                        stmt1.close();
+                        stmt2.close();
+                    }
+                catch(SQLException sqle)
+                    {
+                        System.out.println("Erreur SQL3 : " + sqle.getMessage());
+                    }
+            }
+        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
+        
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        txtNomCli = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        txtLibSession = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        txtDateDeb = new javax.swing.JTextField();
-        txtNbInsc = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        txtNbPlaces = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
+        lblTitre = new javax.swing.JLabel();
+        lblNom = new javax.swing.JLabel();
+        tfNom = new javax.swing.JTextField();
+        lblSession = new javax.swing.JLabel();
+        tfSession = new javax.swing.JTextField();
+        lblDate = new javax.swing.JLabel();
+        tfDate = new javax.swing.JTextField();
+        tfNbreInscrit = new javax.swing.JTextField();
+        lblInscrit = new javax.swing.JLabel();
+        tfNbPlace = new javax.swing.JTextField();
+        lblPlace = new javax.swing.JLabel();
         btnConfirm = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnAnullation = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Confirmer l'inscription");
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Confirmation d'inscription");
+        lblTitre.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        lblTitre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitre.setText("Confirmation d'inscription");
 
-        jLabel3.setText("Nom :");
+        lblNom.setText("Nom :");
 
-        jLabel4.setText("Session :");
+        lblSession.setText("Session :");
 
-        txtLibSession.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLibSessionActionPerformed(evt);
-            }
-        });
+        lblDate.setText("Date : ");
 
-        jLabel5.setText("Date : ");
+        lblInscrit.setText("inscrit(s) pour ");
 
-        jLabel6.setText("inscrit(s) pour ");
-
-        jLabel7.setText("places");
+        lblPlace.setText("places");
 
         btnConfirm.setText("Confirmation");
         btnConfirm.addActionListener(new java.awt.event.ActionListener() {
@@ -116,10 +113,10 @@ public class FenConfirmationInscription extends javax.swing.JDialog {
             }
         });
 
-        jButton2.setText("Annulation");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnAnullation.setText("Annulation");
+        btnAnullation.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnAnullationActionPerformed(evt);
             }
         });
 
@@ -127,78 +124,73 @@ public class FenConfirmationInscription extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lblTitre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(49, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtNbInsc, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfNbreInscrit, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel6)
+                        .addComponent(lblInscrit)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtNbPlaces, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfNbPlace, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblPlace, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(btnConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
+                            .addComponent(btnAnullation, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lblDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+                                .addComponent(lblNom, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblSession, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGap(18, 18, 18)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtNomCli)
-                                .addComponent(txtLibSession, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-                                .addComponent(txtDateDeb)))))
+                                .addComponent(tfNom)
+                                .addComponent(tfSession, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                                .addComponent(tfDate)))))
                 .addGap(30, 30, 30))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNomCli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblNom, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfNom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtLibSession, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblSession)
+                    .addComponent(tfSession, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txtDateDeb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblDate)
+                    .addComponent(tfDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(txtNbInsc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNbPlaces, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
+                    .addComponent(lblInscrit)
+                    .addComponent(tfNbreInscrit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfNbPlace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPlace))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnConfirm)
-                    .addComponent(jButton2))
+                    .addComponent(btnAnullation))
                 .addContainerGap(57, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtLibSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLibSessionActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtLibSessionActionPerformed
-
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
         GregorianCalendar dateJour = new GregorianCalendar();
         String ddate = dateJour.get(GregorianCalendar.YEAR) + "-" + (dateJour.get(GregorianCalendar.MONTH) + 1) + "-" + dateJour.get(GregorianCalendar.DATE);
         // Insertion dans la table inscription
-        String req = "Insert into inscription(client_id, session_formation_id, date_inscription) values (" + matricule;
-        req += ", " + numero + ",'" + ddate + "')";
+        String req = "Insert into inscription(client_id, session_formation_id, date_inscription) values (" + matricule + ", " + numero + ",'" + ddate + "')";
         // M.A.J de la table session_formation (un inscrit de plus)
         String req2 = "Update session_formation set nb_inscrits = nb_inscrits +1 Where id = " + numero;
         // Récupération du numéro de la session concernée
@@ -206,27 +198,26 @@ public class FenConfirmationInscription extends javax.swing.JDialog {
         stmt1 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor", "localhost", "root", "");
         ResultSet rs = GestionBdd.envoiRequeteLMD(stmt1, req3);
         int numForm=0;
-        try
-        {
-            rs.first();
-            numForm = rs.getInt(1);
-        }
-        catch(Exception e)
-        {
-            System.out.println("Erreur requete3 " + e.getMessage());
-        }
+            try
+                {
+                    rs.first();
+                    numForm = rs.getInt(1);
+                }
+            catch(Exception e)
+                {
+                    System.out.println("Erreur requete3 " + e.getMessage());
+                }
         // M.A.J de la table plan_formation (effectue passe à 1 pour le client et la session concernés)
-        String req4 = "Update plan_formation set effectue = 1 Where client_id = " + numero;
-        req4 += " And formation_id = " + numForm;
+        String req4 = "Update plan_formation set effectue = 1 Where client_id = " + numero + " And formation_id = " + numForm;
         int nb1 = GestionBdd.envoiRequeteLID(stmt1, req);
         int nb2 = GestionBdd.envoiRequeteLID(stmt1, req2);
         int nb3 = GestionBdd.envoiRequeteLID(stmt1, req4);
         this.dispose();
     }//GEN-LAST:event_btnConfirmActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnAnullationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnullationActionPerformed
         this.dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnAnullationActionPerformed
 
     /**
      * @param args the command line arguments
@@ -234,18 +225,18 @@ public class FenConfirmationInscription extends javax.swing.JDialog {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAnullation;
     private javax.swing.JButton btnConfirm;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JTextField txtDateDeb;
-    private javax.swing.JTextField txtLibSession;
-    private javax.swing.JTextField txtNbInsc;
-    private javax.swing.JTextField txtNbPlaces;
-    private javax.swing.JTextField txtNomCli;
+    private javax.swing.JLabel lblDate;
+    private javax.swing.JLabel lblInscrit;
+    private javax.swing.JLabel lblNom;
+    private javax.swing.JLabel lblPlace;
+    private javax.swing.JLabel lblSession;
+    private javax.swing.JLabel lblTitre;
+    private javax.swing.JTextField tfDate;
+    private javax.swing.JTextField tfNbPlace;
+    private javax.swing.JTextField tfNbreInscrit;
+    private javax.swing.JTextField tfNom;
+    private javax.swing.JTextField tfSession;
     // End of variables declaration//GEN-END:variables
 }
