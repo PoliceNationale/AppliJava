@@ -2,11 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package gestioninscription;
+package gestionrentabilite;
 
 /**
  *
- * @author Administrateur
+ * @author Valoo22
  */
 import javax.swing.table.AbstractTableModel;
 

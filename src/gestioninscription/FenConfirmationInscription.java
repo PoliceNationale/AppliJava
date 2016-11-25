@@ -10,7 +10,7 @@ import java.util.GregorianCalendar;
 
 /**
  *
- * @author Administrateur
+ * @author Valoo22
  */
 
 public class FenConfirmationInscription extends javax.swing.JDialog 

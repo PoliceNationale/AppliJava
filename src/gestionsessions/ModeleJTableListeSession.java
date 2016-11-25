@@ -6,7 +6,7 @@ package gestionsessions;
 
 /**
  *
- * @author Administrateur
+ * @author Valoo22
  */
 import gestionrentabilite.*;
 import gestioninscription.*;

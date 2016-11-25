@@ -8,7 +8,7 @@ import sql.GestionBdd;
 
 /**
  *
- * @author Administrateur
+ * @author Valoo22
  */
 public class GestionInscription
 {

@@ -18,7 +18,7 @@ import javax.swing.JLabel;
 
 /**
  *
- * @author C103-image
+ * @author Valoo22
  */
 public class Menu extends javax.swing.JFrame 
     {

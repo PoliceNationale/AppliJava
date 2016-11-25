@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author C103-image
+ * @author Valoo22
  */
 public class FenSession extends javax.swing.JDialog {
     Connection conn;

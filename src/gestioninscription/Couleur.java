@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *
- * @author papa
+ * @author Valoo22
  */
 public class Couleur extends DefaultTableCellRenderer
 {

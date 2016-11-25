@@ -6,7 +6,7 @@ package gestionrentabilite;
 
 /**
  *
- * @author Administrateur
+ * @author Valoo22
  */
 import gestioninscription.*;
 import javax.swing.table.AbstractTableModel;

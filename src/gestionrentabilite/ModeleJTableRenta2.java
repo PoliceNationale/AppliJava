@@ -4,7 +4,12 @@
  * and open the template in the editor.
  */
 
-package gestioninscription;
+package gestionrentabilite;
+
+/**
+ *
+ * @author Valoo22
+ */
 
 import javax.swing.table.AbstractTableModel;
 

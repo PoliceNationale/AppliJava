@@ -6,7 +6,7 @@ package gestioninscription;
 
 /**
  *
- * @author Administrateur
+ * @author Valoo22
  */
 import javax.swing.table.AbstractTableModel;
 

@@ -14,7 +14,7 @@ import sql.GestionBdd;
 
 /**
  *
- * @author C103-image
+ * @author Valoo22
  */
 public class FenRentabilite extends javax.swing.JDialog 
     {
