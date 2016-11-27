@@ -35,11 +35,6 @@ public class FenInscription extends javax.swing.JFrame
             lblSelection.setText("Aucune sélection");  
         }
 
-    FenInscription(String gestion_des_Inscriptions) 
-        {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
         /**
          * This method is called from within the constructor to initialize the form.
          * WARNING: Do NOT modify this code. The content of this method is always
@@ -163,7 +158,7 @@ public class FenInscription extends javax.swing.JFrame
                 stmt1 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
                 stmt2 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
                 // Liste des clients qui "ont un plan de formation"
-                String req = "select distinct c.matricule from client c, plan_formation p where c.matricule = p.matricule order by c.matricule";
+                String req = "select distinct c.id from client c, plan_formation p where c.id = p.client_id order by c.id";
                 ResultSet rs = GestionBdd.envoiRequeteLMD(stmt1,req);
                 cbxMatricule.addItem("---");
                 while (rs.next())
@@ -235,14 +230,14 @@ public class FenInscription extends javax.swing.JFrame
                         {
                             jLabel3.setText("ENSEMBLE DES SESSIONS");
                             // Toutes les sessions
-                            req = "select null, s.numero, s.libelleform, s.niveauform, s.datedebut, duree, nb_places, nb_inscrits, coutrevient from session_form s, formation f where s.libelleform = f.libelle and s.niveauform = f.niveau";
+                            req = "select null, s.id, s.formation_id, f.niveau, s.date_debut, f.duree, s.nb_places, s.nb_inscrits, f.coutrevient from session_formation s, formation f where s.formation_id = f.id and s.date_debut > CURRENT_DATE";
                             // et date supérieure à la date du jour
                             btninscription.setVisible(false); // On rend le bouton inscription non visible
                         }
                     else
                         {
                             // Sélection des sessions "autorisées"
-                            req = "call sessions_autorisees('" + cbxMatricule.getSelectedItem() + "')";
+                            req = "call sessions_autorisees('" + cbxMatricule.getSelectedIndex() + "')";
                             //Si la cellule sélectionnée est vide
                             if (tInscription.getValueAt(tInscription.getSelectedRow(), 0) != null) 
                                 {
