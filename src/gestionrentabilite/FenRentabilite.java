@@ -7,11 +7,7 @@
 package gestionrentabilite;
 
 import java.awt.Color;
-import java.awt.event.WindowListener;
 import java.sql.*;
-import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
-import sql.GestionBdd;
-
 /**
  *
  * @author Valoo22
@@ -25,32 +21,32 @@ public class FenRentabilite extends javax.swing.JDialog
         public FenRentabilite() 
             {
                 initComponents();
-                jTable1.getTableHeader().setReorderingAllowed(false);
+                TSession.getTableHeader().setReorderingAllowed(false);
             }
         public FenRentabilite(Connection conn)
             {
                 try
                     {  
                         initComponents();
-                        jTable1.getTableHeader().setReorderingAllowed(false);
+                        TSession.getTableHeader().setReorderingAllowed(false);
                         conn1 = conn;
                         lblMarge.setText("");
                         Statement stmt = conn.createStatement();
-                        ResultSet rs  = stmt.executeQuery("SELECT DISTINCT numero, libelleform, datedebut, nb_inscrits, nb_places, round(nb_inscrits*100/nb_places,2) as TauxRemplissage FROM session_form s, formation f WHERE libelleform = libelle AND datedebut < current_date");
+                        ResultSet rs  = stmt.executeQuery("SELECT DISTINCT s.id, libelle, date_debut, nb_inscrits, nb_places, round(nb_inscrits*100/nb_places,2) as TauxRemplissage FROM session_formation s, formation f WHERE date_debut > CURRENT_DATE AND s.formation_id = f.id");
                         int lig = 0;
                         //vider
-                        for(int i=0; i < jTable1.getRowCount();i++)
+                        for(int i=0; i < TSession.getRowCount();i++)
                             {
-                                for(int col=0;col <jTable1.getColumnCount();col++)
+                                for(int col=0;col <TSession.getColumnCount();col++)
                                     {
-                                        jTable1.setValueAt(null,i,col);
+                                        TSession.setValueAt(null,i,col);
                                     }
                             }
                         while (rs.next())
                             {
-                                for(int col=0;col <jTable1.getColumnCount();col++)
+                                for(int col=0;col <TSession.getColumnCount();col++)
                                     {
-                                        jTable1.setValueAt(rs.getObject(col+1),lig,col);
+                                        TSession.setValueAt(rs.getObject(col+1),lig,col);
                                     }
                                 lig++;
                             }
@@ -76,9 +72,9 @@ public class FenRentabilite extends javax.swing.JDialog
         jTable2 = new javax.swing.JTable();
         lblTitre = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TSession = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        TClient = new javax.swing.JTable();
         lblTMarge = new javax.swing.JLabel();
         lblMarge = new javax.swing.JLabel();
         pbTauxRemplissage = new javax.swing.JProgressBar();
@@ -107,16 +103,16 @@ public class FenRentabilite extends javax.swing.JDialog
         lblTitre.setFocusable(false);
         lblTitre.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jTable1.setModel(new ModeleJTableRenta());
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        TSession.setModel(new ModeleJTableRenta());
+        TSession.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                TSessionMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(TSession);
 
-        jTable3.setModel(new ModeleJTableRenta2());
-        jScrollPane3.setViewportView(jTable3);
+        TClient.setModel(new ModeleJTableRenta2());
+        jScrollPane3.setViewportView(TClient);
 
         lblTMarge.setText("Marge : ");
 
@@ -198,38 +194,38 @@ public class FenRentabilite extends javax.swing.JDialog
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        if (jTable1.getValueAt(jTable1.getSelectedRow(), 0) != null)
+    private void TSessionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TSessionMouseClicked
+        if (TSession.getValueAt(TSession.getSelectedRow(), 0) != null)
             {
-                String num_sess = (jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
+                String num_sess = (TSession.getValueAt(TSession.getSelectedRow(), 0).toString());
                 try
                     { 
                         Statement stmt = conn1.createStatement();
-                        ResultSet rs  = stmt.executeQuery("SELECT nom, taux_horaire FROM client, statut, inscription WHERE typestatut = type AND client.matricule = inscription.matricule AND num_session =" + num_sess);
+                        ResultSet rs  = stmt.executeQuery("SELECT nom, taux_horaire FROM client, statut, inscription WHERE statut.id = client.statut_id AND client.id = inscription.client_id AND session_formation_id =" + num_sess);
                         int lig = 0;
                         //vider[[
-                        for(int i=0; i < jTable3.getRowCount();i++)
+                        for(int i=0; i < TClient.getRowCount();i++)
                             {
-                                for(int col=0;col <jTable3.getColumnCount();col++)
+                                for(int col=0;col <TClient.getColumnCount();col++)
                                     {
-                                        jTable3.setValueAt(null,i,col);
+                                        TClient.setValueAt(null,i,col);
                                     }
                             }
                         //]]
                         while (rs.next())
                             {
-                                for(int col=0;col <jTable3.getColumnCount();col++)
+                                for(int col=0;col <TClient.getColumnCount();col++)
                                     {
-                                        jTable3.setValueAt(rs.getObject(col+1),lig,col);
+                                        TClient.setValueAt(rs.getObject(col+1),lig,col);
                                     }
                                 lig++;
                             }
                         rs.close();
                         //on récupère la formation :
                         int ligne=0;
-                        ligne=jTable1.getSelectedRow();
-                        Object cellule = jTable1.getValueAt(ligne,0);
-                        Object tr = jTable1.getValueAt(ligne,5);
+                        ligne=TSession.getSelectedRow();
+                        Object cellule = TSession.getValueAt(ligne,0);
+                        Object tr = TSession.getValueAt(ligne,5);
                         String sttr = tr.toString();
                         double inttr = Double.parseDouble(sttr);
                         int restr = (int) inttr;
@@ -244,12 +240,12 @@ public class FenRentabilite extends javax.swing.JDialog
                                 //on prend le cumul
                                 System.out.println("num formation : " + num);
                                 Statement stmt1 = conn1.createStatement();
-                                ResultSet rs2 =  stmt1.executeQuery("Select sum(taux_horaire) as revenu_session from statut st, session_form s, client c, inscription i where s.numero = i.num_session and c.matricule = i.matricule and c.typestatut = st.type and s.numero = " + num);
+                                ResultSet rs2 =  stmt1.executeQuery("Select sum(taux_horaire) as revenu_session from statut st, session_formation s, client c, inscription i where s.id = i.session_formation_id and c.id = i.id and c.statut_id = st.id and s.id = " + num);
                                 rs2.next(); // car le premier rsultat est en position 1 et on est en 0
                                 System.out.println("cumul :"+rs2.getFloat(1));
                                 //on prend le cout de revien
                                 Statement stmt2 = conn1.createStatement();
-                                ResultSet rs3 = stmt2.executeQuery("Select coutrevient from formation, session_form where libelle = libelleform and niveauform = niveau and numero = " + num );
+                                ResultSet rs3 = stmt2.executeQuery("Select coutrevient from formation, session_formation where formation.id = session_formation.formation_id and session_formation.id = " + num );
                                 rs3.next();
                                 System.out.println("cout de revient : "+rs3.getFloat(1));
                                 //marge = cout de revien - cumul
@@ -285,17 +281,17 @@ public class FenRentabilite extends javax.swing.JDialog
         else
             {
                 //on vide si on click sur rien
-                for(int i=0; i < jTable3.getRowCount();i++)
+                for(int i=0; i < TClient.getRowCount();i++)
                     {
-                        for(int col=0;col <jTable3.getColumnCount();col++)
+                        for(int col=0;col <TClient.getColumnCount();col++)
                             {
-                                jTable3.setValueAt(null,i,col);
+                                TClient.setValueAt(null,i,col);
                             }
                     }
                 lblMarge.setText("");
                 System.out.println("vide");     
             }
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_TSessionMouseClicked
 
     private void btnRetourMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetourMenuActionPerformed
         this.dispose();
@@ -306,14 +302,14 @@ public class FenRentabilite extends javax.swing.JDialog
     }//GEN-LAST:event_bynQuitterActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TClient;
+    private javax.swing.JTable TSession;
     private javax.swing.JButton btnRetourMenu;
     private javax.swing.JButton bynQuitter;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private javax.swing.JLabel lblMarge;
     private javax.swing.JLabel lblTMarge;
     private javax.swing.JLabel lblTauxRemplissage;
