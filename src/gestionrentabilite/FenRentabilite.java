@@ -32,7 +32,7 @@ public class FenRentabilite extends javax.swing.JDialog
                         conn1 = conn;
                         lblMarge.setText("");
                         Statement stmt = conn.createStatement();
-                        ResultSet rs  = stmt.executeQuery("SELECT DISTINCT s.id, libelle, date_debut, nb_inscrits, nb_places, round(nb_inscrits*100/nb_places,2) as TauxRemplissage FROM session_formation s, formation f WHERE date_debut > CURRENT_DATE AND s.formation_id = f.id");
+                        ResultSet rs  = stmt.executeQuery("SELECT DISTINCT s.id, libelle, date_debut, nb_inscrits, nb_places, round(nb_inscrits*100/nb_places,2) as TauxRemplissage FROM session_formation s, formation f WHERE date_debut < CURRENT_DATE AND s.formation_id = f.id");
                         int lig = 0;
                         //vider
                         for(int i=0; i < TSession.getRowCount();i++)

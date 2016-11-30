@@ -72,7 +72,7 @@ public class FenInscription extends javax.swing.JFrame
         lblTitre.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblTitre.setDoubleBuffered(true);
 
-        lblMatricule.setText("Matricule : ");
+        lblMatricule.setText("Nom Prenom Client  :");
 
         cbxMatricule.setName("cmbMat"); // NOI18N
         cbxMatricule.addItemListener(new java.awt.event.ItemListener() {
@@ -110,12 +110,12 @@ public class FenInscription extends javax.swing.JFrame
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btninscription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 826, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1)
                         .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(11, 11, 11)
-                .addComponent(lblMatricule, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(lblMatricule)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbxMatricule, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblSelection, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -123,7 +123,7 @@ public class FenInscription extends javax.swing.JFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(558, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblTitre)
@@ -158,7 +158,7 @@ public class FenInscription extends javax.swing.JFrame
                 stmt1 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
                 stmt2 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
                 // Liste des clients qui "ont un plan de formation"
-                String req = "select distinct c.id from client c, plan_formation p where c.id = p.client_id order by c.id";
+                String req = "select distinct c.nom from client c, plan_formation p where c.id = p.client_id order by c.id";
                 ResultSet rs = GestionBdd.envoiRequeteLMD(stmt1,req);
                 cbxMatricule.addItem("---");
                 while (rs.next())
@@ -226,11 +226,11 @@ public class FenInscription extends javax.swing.JFrame
                                     tInscription.setValueAt(null,i,j);
                                 }
                         }
-                    if (cbxMatricule.getSelectedIndex()==0 || cbxMatricule.getSelectedItem()== null) // Pas de client de choisi
+                    if (cbxMatricule.getSelectedIndex()==-1) // Pas de client de choisi
                         {
                             jLabel3.setText("ENSEMBLE DES SESSIONS");
                             // Toutes les sessions
-                            req = "select null, s.id, s.formation_id, f.niveau, s.date_debut, f.duree, s.nb_places, s.nb_inscrits, f.coutrevient from session_formation s, formation f where s.formation_id = f.id and s.date_debut > CURRENT_DATE";
+                            req = "SELECT * FROM viewdetailssessions n WHERE n.dateDebut > CURRENT_DATE";
                             // et date supérieure à la date du jour
                             btninscription.setVisible(false); // On rend le bouton inscription non visible
                         }
@@ -253,21 +253,24 @@ public class FenInscription extends javax.swing.JFrame
                         {
                             while(rs2.next())
                                 {
-                                    if (k==0 && cbxMatricule.getSelectedIndex()!=0)
+                                    if (k==0 && cbxMatricule.getSelectedIndex()!=-1)
                                         {
-                                            jLabel3.setText("Sessions autorisées pour : " + rs2.getString(1));
+                                            jLabel3.setText("Sessions autorisées pour : " + cbxMatricule.getSelectedItem().toString());
                                         }
                                     // On calcule la marge et on renseigne la dernière colonne(7ème) du jTable
-                                    req = "Select sum(taux_horaire) as revenu_session from statut st, session_form s, client c, inscription i where s.numero = i.num_session and c.matricule = i.matricule and c.typestatut = st.type and s.numero = " + rs2.getInt(2);
+                                    req = "Select sum(taux_horaire) as revenu_session from statut st, session_formation s, client c, inscription i where s.id = i.session_formation_id and c.id = i.client_id and c.statut_id = st.id and s.id = " + rs2.getInt(1);
                                     stmt2 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
                                     rs3 = GestionBdd.envoiRequeteLMD(stmt2, req);
                                     rs3.first();
-                                    tInscription.setValueAt((rs3.getFloat(1) - rs2.getFloat(9)), k, 7);
+                                    tInscription.setValueAt((rs3.getFloat(1) - rs2.getFloat(13)), k, 7);
                                     // On renseigne le reste du jTable
-                                    for (j=0;j<(tInscription.getColumnCount() -1);j++)
-                                        {
-                                            tInscription.setValueAt(rs2.getObject(j+2), k, j);
-                                        }
+                                    tInscription.setValueAt(rs2.getInt(1), k, 0);
+                                    tInscription.setValueAt(rs2.getString(7), k, 1);
+                                    tInscription.setValueAt(rs2.getString(8), k, 2);
+                                    tInscription.setValueAt(rs2.getObject(3), k, 3);
+                                    tInscription.setValueAt(rs2.getInt(12), k, 4);
+                                    tInscription.setValueAt(rs2.getInt(4), k, 5);
+                                    tInscription.setValueAt(rs2.getInt(3), k, 6);
                                     k++;
                                 }
                             rs2.close();

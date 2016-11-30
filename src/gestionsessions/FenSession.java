@@ -46,9 +46,9 @@ public class FenSession extends javax.swing.JDialog {
                                 }
                         }
                     // Toutes les sessions
-                    req = "select s.numero, s.libelleform, s.niveauform, s.datedebut, duree, nb_places, nb_inscrits, coutrevient from session_form s, formation f";
+                    req = "select * from viewdetailssessions v";
                     // et date supérieure à la date du jour
-                    req += "where s.datedebut > CURDATE() and s.libelleform = f.libelle and s.niveauform = f.niveau order by s.datedebut";
+                    req += "where v.dateDebut > CURRENT_DATE ORDER BY v.dateDebut";
                     stmt1 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
                     ResultSet rs2 = GestionBdd.envoiRequeteLMD(stmt1, req);
                     ResultSet rs3 = null;
