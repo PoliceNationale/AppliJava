@@ -17,8 +17,9 @@ public class FenConfirmationInscription extends javax.swing.JDialog
     {
         Statement stmt1 = null;
         Statement stmt2 = null;
-        String matricule;
+        int matricule;
         int numero;
+        String nom_client;
         
         /**
          * Creates new form FenConfirmationInscription2
@@ -29,9 +30,9 @@ public class FenConfirmationInscription extends javax.swing.JDialog
                 super(parent, modal);
                 initComponents();
             }
-        public void init(Object matClient, Object numSession)
+        public void init(Object id_client, Object numSession)
             {
-                matricule = (String)matClient;
+                matricule = (Integer)id_client;
                 numero = (Integer)numSession;
                 //jLabel2.setText((String)matClient + " " + (Integer)numSession);
                 stmt1 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor", "localhost", "root", "");
@@ -41,23 +42,20 @@ public class FenConfirmationInscription extends javax.swing.JDialog
                 req += "Where s.formation_id = f.id ";
                 req += "And s.id = " + numero;
                 ResultSet rsSession = GestionBdd.envoiRequeteLMD(stmt1, req);
-                req = "Select nom ";
-                req += "From client ";
-                req += "Where id = '" + matricule + "'";
+                req = "Select nom from client Where id =" + id_client;
                 ResultSet rsClient = GestionBdd.envoiRequeteLMD(stmt2, req);
                 try
                     {
+                        rsClient.first();
+                        nom_client = rsClient.getString("nom");
                         rsSession.first();
                         tfSession.setText(rsSession.getString("libelle") + " " + rsSession.getString("niveau") );
                         tfDate.setText(rsSession.getString("date_debut"));
                         tfNbPlace.setText(String.valueOf(rsSession.getInt("nb_places")));
                         tfNbreInscrit.setText(String.valueOf(rsSession.getInt("nb_inscrits")));
-                        rsClient.first();
-                        tfNom.setText(rsClient.getString("nom"));
+                        tfNom.setText(nom_client);
                         rsSession.close();
-                        rsClient.close();
                         stmt1.close();
-                        stmt2.close();
                     }
                 catch(SQLException sqle)
                     {
@@ -158,7 +156,7 @@ public class FenConfirmationInscription extends javax.swing.JDialog
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNom, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tfNom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -180,7 +178,7 @@ public class FenConfirmationInscription extends javax.swing.JDialog
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnConfirm)
                     .addComponent(btnAnullation))
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();

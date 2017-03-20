@@ -59,6 +59,8 @@
               <EmptySpace max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="btnRetour" min="-2" pref="150" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
               <Component id="lblTitre" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="231" max="-2" attributes="0"/>
@@ -69,7 +71,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-              <Component id="lblTitre" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="lblTitre" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnRetour" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="cbxMatricule" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -160,6 +165,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="S&#xe9;lection : "/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnRetour">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Retour"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRetourActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

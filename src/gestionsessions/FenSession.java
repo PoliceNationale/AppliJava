@@ -46,9 +46,9 @@ public class FenSession extends javax.swing.JDialog {
                                 }
                         }
                     // Toutes les sessions
-                    req = "select * from viewdetailssessions v";
+                    req = "select * from viewdetailsession v";
                     // et date supérieure à la date du jour
-                    req += "where v.dateDebut > CURRENT_DATE ORDER BY v.dateDebut";
+                    req += " where v.date_debut > CURRENT_DATE ORDER BY v.date_debut";
                     stmt1 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
                     ResultSet rs2 = GestionBdd.envoiRequeteLMD(stmt1, req);
                     ResultSet rs3 = null;
@@ -57,18 +57,31 @@ public class FenSession extends javax.swing.JDialog {
                         {
                             while(rs2.next())
                                 {
-
                                     // On calcule la marge
-                                    req = "Select sum(taux_horaire) as revenu_session from statut st, session_form s, client c, inscription i where s.numero = i.num_session and c.matricule = i.matricule and c.typestatut = st.type and s.numero = " + rs2.getInt(1);
+                                    req = "Select sum(taux_horaire) as revenu_session from statut st, session_formation s, client c, inscription i where s.id = i.session_formation_id and c.id = i.client_id and c.statut_id = st.id and s.id = " + rs2.getInt(1);
                                     stmt2 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
                                     rs3 = GestionBdd.envoiRequeteLMD(stmt2, req);
                                     rs3.first();
-                                    jTableGestionSession.setValueAt((rs3.getFloat(1) - rs2.getFloat(8)) , k, 7);
+                                    jTableGestionSession.setValueAt((rs3.getFloat(1) - rs2.getFloat(13)) , k, 9);
                                     // On renseigne le jTable
-                                    for (j=0;j<jTableGestionSession.getColumnCount() - 1;j++)
-                                        {
-                                            jTableGestionSession.setValueAt(rs2.getObject(j+1), k, j);
-                                        }
+                                    jTableGestionSession.setValueAt(rs2.getInt(1), k, 0);
+                                    jTableGestionSession.setValueAt(rs2.getString(7), k, 1);
+                                    jTableGestionSession.setValueAt(rs2.getString(8), k, 2);
+                                    jTableGestionSession.setValueAt(rs2.getString(9), k, 3);
+                                    jTableGestionSession.setValueAt(rs2.getString(10), k, 4);
+                                    String diplomante;
+                                    if(rs2.getInt("diplomante")==1)
+                                    {
+                                        diplomante="Oui";
+                                    }
+                                    else
+                                    {
+                                       diplomante="Non"; 
+                                    }
+                                    jTableGestionSession.setValueAt(diplomante, k, 5);
+                                    jTableGestionSession.setValueAt(rs2.getObject(3), k, 6);
+                                    jTableGestionSession.setValueAt(rs2.getInt(12), k, 7);
+                                    jTableGestionSession.setValueAt(rs2.getInt(4), k, 8);
                                     k++;
                                 }
                             rs2.close();
@@ -130,7 +143,7 @@ public class FenSession extends javax.swing.JDialog {
             }
         });
 
-        cmbItems.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tous", "Bureautique", "Comptabilité" }));
+        cmbItems.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tous", "Bureautique", "Compta" }));
         cmbItems.setName("cmbItems"); // NOI18N
         cmbItems.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -146,14 +159,8 @@ public class FenSession extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 825, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(270, 270, 270)
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 825, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(129, 129, 129)
@@ -162,22 +169,25 @@ public class FenSession extends javax.swing.JDialog {
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(136, 136, 136))
             .addGroup(layout.createSequentialGroup()
-                .addGap(255, 255, 255)
-                .addComponent(lblTypeFormation)
-                .addGap(18, 18, 18)
-                .addComponent(cmbItems, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblTypeFormation)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbItems, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(20, 20, 20)
                 .addComponent(jLabel1)
-                .addGap(32, 32, 32)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmbItems, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTypeFormation))
-                .addGap(33, 33, 33)
+                .addGap(24, 24, 24)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -189,94 +199,93 @@ public class FenSession extends javax.swing.JDialog {
         cmbItems.getAccessibleContext().setAccessibleName("cmbItems");
         cmbItems.getAccessibleContext().setAccessibleDescription("");
         lblTypeFormation.getAccessibleContext().setAccessibleName("lblTypeFormation");
-        lblTypeFormation.getAccessibleContext().setAccessibleDescription("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTableGestionSessionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableGestionSessionMouseClicked
-        Document document = new Document();
-        String req;
-        int nbLignes = 0;
-        // Creation d'une PdfPTable avec 5 colonnes
-        final PdfPTable table = new PdfPTable(5);
-        try 
-            {
-                PdfWriter.getInstance(document,new FileOutputStream(System.getProperty("user.dir") + "//listeEmargementSession.pdf"));
-                document.open();
-                //en tête du pdf
-                Image logo = Image.getInstance("logo.png");
-                logo.scaleAbsolute(120f, 67f);
-                document.add(logo);
-                //on indique la marge
-                document.add(new Phrase("\n\n\nMarge dégagée par la session: " + jTableGestionSession.getValueAt(jTableGestionSession.getSelectedRow(), 7).toString() + "€"));
-                document.add(new Phrase("\n\nListe d'émargement de la session "));
-                document.add(new Phrase(jTableGestionSession.getValueAt(jTableGestionSession.getSelectedRow(), 0).toString()));
-                document.add(new Phrase(" / "+jTableGestionSession.getValueAt(jTableGestionSession.getSelectedRow(), 1).toString()));
-                document.add(new Phrase(" / "+jTableGestionSession.getValueAt(jTableGestionSession.getSelectedRow(), 2).toString()));
-                document.add(new Phrase(" / "+jTableGestionSession.getValueAt(jTableGestionSession.getSelectedRow(), 3).toString()+":"));
-                // Ajout d'un espace entre la PdfPTable et l'élément précédent.
-                table.setSpacingBefore(15f);
-                //requête pour les personnes inscrites
-                stmt1 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
-                req = "Select client.matricule, client.nom, client.rue, client.cp, client.ville from client, inscription where client.matricule = inscription.matricule and inscription.num_session = " + jTableGestionSession.getValueAt(jTableGestionSession.getSelectedRow(), 0).toString();
-                ResultSet rs1 = GestionBdd.envoiRequeteLMD(stmt1, req);       
-                // Ajout d'une entête pour PdfPTable
-                table.addCell("Matricule");
-                table.addCell("Nom");
-                table.addCell("Rue");
-                table.addCell("Code Postal");
-                table.addCell("Ville");
-                // Ajout d'un espace entre la PdfPTable et l'élément précédent.
-                table.setSpacingBefore(15f);
-                table.setWidthPercentage(100);
-                table.setSpacingBefore(0f);
-                table.setSpacingAfter(0f);
-                //change taille colonnes
-                table.setWidths(new int[]{5, 10, 14, 6, 8});
-                while (rs1.next())
-                    {
-                        // Ajout d'objets String à la PdfPTable
-                        table.addCell(rs1.getString(1));
-                        table.addCell(rs1.getString(2));
-                        table.addCell(rs1.getString(3));
-                        table.addCell(rs1.getString(4));
-                        table.addCell(rs1.getString(5));
-                        // Ajout d'un espace entre la PdfPTable et l'élément précédent.
-                        table.setSpacingBefore(15f);
-                        nbLignes ++;
-                    }    
-                //cas ou il n'y a personne d'inscrit
-                if (nbLignes == 0)
-                    {
-                        JOptionPane.showMessageDialog(null,"Il n'y a personne d'inscrits");
-                        document.add(new Phrase("\n\nIl n'y a personne d'inscrits"));
-                    } 
-                else
-                    {
-                        document.add(table); 
-                        //ouvre le fichier listeEmargementSession.pdf avec le logiciel de lecture pdf par défaut 
-                        Runtime r= Runtime.getRuntime();
-                        r.exec(new String[]{"cmd.exe","/C",System.getProperty("user.dir")+"//listeEmargementSession.pdf"});
-                    }
-                document.close();
-            } 
-        catch (DocumentException e) 
-            {
-                e.printStackTrace();
-            } 
-        catch (FileNotFoundException e) 
-            {
-                e.printStackTrace();
-            } 
-        catch (SQLException ex) 
-            {
-                Logger.getLogger(FenSession.class.getName()).log(Level.SEVERE, null, ex);
-            } 
-        catch (IOException ex) 
-            {
-                Logger.getLogger(FenSession.class.getName()).log(Level.SEVERE, null, ex);
-            }
+Document document = new Document();
+String req;
+int nbLignes = 0;
+// Creation d'une PdfPTable avec 5 colonnes
+final PdfPTable table = new PdfPTable(5);
+try 
+{
+    PdfWriter.getInstance(document,new FileOutputStream(System.getProperty("user.dir") + "//listeEmargementSession.pdf"));
+    document.open();
+    //en tête du pdf
+    Image logo = Image.getInstance("logo.png");
+    logo.scaleAbsolute(120f, 67f);
+    document.add(logo);
+    //on indique la marge
+    document.add(new Phrase("\n\n\nMarge dégagée par la session: " + jTableGestionSession.getValueAt(jTableGestionSession.getSelectedRow(), 9).toString() + "€"));
+    document.add(new Phrase("\n\nListe d'émargement de la session "));
+    document.add(new Phrase(jTableGestionSession.getValueAt(jTableGestionSession.getSelectedRow(), 0).toString()));
+    document.add(new Phrase(" / "+jTableGestionSession.getValueAt(jTableGestionSession.getSelectedRow(), 1).toString()));
+    document.add(new Phrase(" / "+jTableGestionSession.getValueAt(jTableGestionSession.getSelectedRow(), 2).toString()));
+    document.add(new Phrase(" / "+jTableGestionSession.getValueAt(jTableGestionSession.getSelectedRow(), 3).toString()+":"));
+    // Ajout d'un espace entre la PdfPTable et l'élément précédent.
+    table.setSpacingBefore(15f);
+    //requête pour les personnes inscrites
+    stmt1 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
+    req = "Select c.* from client c, inscription i where c.id = i.client_id and i.session_formation_id = " + jTableGestionSession.getValueAt(jTableGestionSession.getSelectedRow(), 0).toString();
+    ResultSet rs1 = GestionBdd.envoiRequeteLMD(stmt1, req);       
+    // Ajout d'une entête pour PdfPTable
+    table.addCell("Matricule");
+    table.addCell("Nom");
+    table.addCell("Rue");
+    table.addCell("Code Postal");
+    table.addCell("Ville");
+    // Ajout d'un espace entre la PdfPTable et l'élément précédent.
+    table.setSpacingBefore(15f);
+    table.setWidthPercentage(100);
+    table.setSpacingBefore(0f);
+    table.setSpacingAfter(0f);
+    //change taille colonnes
+    table.setWidths(new int[]{5, 10, 14, 6, 8});
+    while (rs1.next())
+        {
+            // Ajout d'objets String à la PdfPTable
+            table.addCell(rs1.getString(1));
+            table.addCell(rs1.getString(3));
+            table.addCell(rs1.getString(5));
+            table.addCell(rs1.getString(6));
+            table.addCell(rs1.getString(7));
+            // Ajout d'un espace entre la PdfPTable et l'élément précédent.
+            table.setSpacingBefore(15f);
+            nbLignes ++;
+        }    
+    //cas ou il n'y a personne d'inscrit
+    if (nbLignes == 0)
+        {
+            JOptionPane.showMessageDialog(null,"Il n'y a personne d'inscrits");
+            document.add(new Phrase("\n\nIl n'y a personne d'inscrits"));
+        } 
+    else
+        {
+            document.add(table); 
+            //ouvre le fichier listeEmargementSession.pdf avec le logiciel de lecture pdf par défaut 
+            Runtime r= Runtime.getRuntime();
+            r.exec(new String[]{"cmd.exe","/C",System.getProperty("user.dir")+"//listeEmargementSession.pdf"});
+        }
+    document.close();
+} 
+catch (DocumentException e) 
+    {
+        e.printStackTrace();
+    } 
+catch (FileNotFoundException e) 
+    {
+        e.printStackTrace();
+    } 
+catch (SQLException ex) 
+    {
+        Logger.getLogger(FenSession.class.getName()).log(Level.SEVERE, null, ex);
+    } 
+catch (IOException ex) 
+    {
+        Logger.getLogger(FenSession.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }//GEN-LAST:event_jTableGestionSessionMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -301,14 +310,14 @@ public class FenSession extends javax.swing.JDialog {
                             }
                     }
                 // Toutes les sessions
-                req = "select s.numero, s.libelleform, s.niveauform, s.datedebut, duree, nb_places, nb_inscrits, coutrevient from session_form s, formation f ";
+                req = "Select * from viewdetailsession v ";
                 // et date supérieure à la date du jour
-                req += "where s.datedebut > CURDATE() and s.libelleform = f.libelle and s.niveauform = f.niveau ";    
+                req += "where v.date_debut > CURDATE() ";    
                 if (cmbItems.getSelectedItem().toString() != "Tous")
                     {
-                        req +=  "and f.type = '" + cmbItems.getSelectedItem().toString() + "'";
+                        req +=  "and v.type_form = '" + cmbItems.getSelectedItem().toString() + "'";
                     }
-                req += " order by s.datedebut";
+                req += " order by v.date_debut";
                 stmt1 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
                 ResultSet rs2 = GestionBdd.envoiRequeteLMD(stmt1, req);
                 ResultSet rs3 = null;
@@ -318,16 +327,30 @@ public class FenSession extends javax.swing.JDialog {
                         while(rs2.next())
                             {
                                 // On calcule la marge
-                                req = "Select sum(taux_horaire) as revenu_session from statut st, session_form s, client c, inscription i where s.numero = i.num_session and c.matricule = i.matricule and c.typestatut = st.type and s.numero = " + rs2.getInt(1);
+                                req = "Select sum(taux_horaire) as revenu_session from statut st, session_formation s, client c, inscription i where s.id = i.session_formation_id and c.id = i.client_id and c.statut_id = st.id and s.id = " + rs2.getInt(1);
                                 stmt2 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
                                 rs3 = GestionBdd.envoiRequeteLMD(stmt2, req);
                                 rs3.first();
-                                jTableGestionSession.setValueAt((rs3.getFloat(1) - rs2.getFloat(8)) , k, 7);
+                                jTableGestionSession.setValueAt((rs3.getFloat(1) - rs2.getFloat(13)) , k, 9);
                                 // On renseigne le jTable
-                                for (j=0;j<jTableGestionSession.getColumnCount() - 1;j++)
-                                    {
-                                        jTableGestionSession.setValueAt(rs2.getObject(j+1), k, j);
-                                    }
+                                jTableGestionSession.setValueAt(rs2.getInt(1), k, 0);
+                                jTableGestionSession.setValueAt(rs2.getString(7), k, 1);
+                                jTableGestionSession.setValueAt(rs2.getString(8), k, 2);
+                                jTableGestionSession.setValueAt(rs2.getString(9), k, 3);
+                                jTableGestionSession.setValueAt(rs2.getString(10), k, 4);
+                                String diplomante;
+                                if(rs2.getInt("diplomante")==1)
+                                {
+                                    diplomante="Oui";
+                                }
+                                else
+                                {
+                                   diplomante="Non"; 
+                                }
+                                jTableGestionSession.setValueAt(diplomante, k, 5);
+                                jTableGestionSession.setValueAt(rs2.getObject(3), k, 6);
+                                jTableGestionSession.setValueAt(rs2.getInt(12), k, 7);
+                                jTableGestionSession.setValueAt(rs2.getInt(4), k, 8);
                                 k++;
                             }
                         rs2.close();

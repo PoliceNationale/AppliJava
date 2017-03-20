@@ -3,8 +3,6 @@
  * and open the template in the editor.
  */
 package gestioninscription;
-import java.awt.Color;
-import java.awt.Label;
 import java.awt.event.WindowListener;
 import java.sql.*;
 import java.util.logging.Level;
@@ -22,7 +20,8 @@ public class FenInscription extends javax.swing.JFrame
          * Creates new form FenInscription
          */
         Connection conn;
-        Statement stmt1, stmt2;
+        Statement stmt1, stmt2, stmt3;
+        int id_client;
     
     public FenInscription()
         {
@@ -52,6 +51,7 @@ public class FenInscription extends javax.swing.JFrame
         tInscription = new javax.swing.JTable();
         btninscription = new javax.swing.JButton();
         lblSelection = new javax.swing.JLabel();
+        btnRetour = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestion des incriptions");
@@ -101,6 +101,13 @@ public class FenInscription extends javax.swing.JFrame
 
         lblSelection.setText("Sélection : ");
 
+        btnRetour.setText("Retour");
+        btnRetour.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRetourActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -125,7 +132,9 @@ public class FenInscription extends javax.swing.JFrame
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(btnRetour, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblTitre)
                 .addGap(231, 231, 231))
         );
@@ -133,7 +142,9 @@ public class FenInscription extends javax.swing.JFrame
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(lblTitre)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitre)
+                    .addComponent(btnRetour))
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbxMatricule, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -157,13 +168,13 @@ public class FenInscription extends javax.swing.JFrame
                 // On prévoit 2 connexions à la base
                 stmt1 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
                 stmt2 = GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
-                // Liste des clients qui "ont un plan de formation"
-                String req = "select distinct c.nom from client c, plan_formation p where c.id = p.client_id order by c.id";
+                // Liste des clients qui ont un plan de formation"
+                String req = "select distinct c.nom from client c, plan_formation p where c.id = p.client_id order by c.nom";
                 ResultSet rs = GestionBdd.envoiRequeteLMD(stmt1,req);
-                cbxMatricule.addItem("---");
+                cbxMatricule.addItem("Tous");
                 while (rs.next())
                 {
-                    cbxMatricule.addItem(rs.getString(1));
+                    cbxMatricule.addItem(rs.getString("nom"));
                 }
             }
         catch (SQLException se)
@@ -177,13 +188,28 @@ public class FenInscription extends javax.swing.JFrame
         // Affichage du nom prénom et de la liste des sessions autorisées
         if (evt.getStateChange() != 1) // Pour éviter le déclenchement sur la création de la fenêtre
             {
+                stmt3= GestionBdd.connexionBdd(GestionBdd.TYPE_MYSQL, "formarmor","localhost", "root","");
+                String req1;
+                req1="Select id from client where nom ='"+ cbxMatricule.getSelectedItem().toString()+"'";
+                ResultSet rs4 = GestionBdd.envoiRequeteLMD(stmt3, req1);
+            try 
+            {
+                rs4.first();
+                id_client=rs4.getInt("id");
+                rs4.close();
+                stmt3.close();
+            } 
+            catch (SQLException ex) 
+            {
+                System.out.println("ErreurSql : "+ex.getMessage());
+            }
                 renseigne();
             }
     }//GEN-LAST:event_cbxMatriculeItemStateChanged
 
     private void btninscriptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btninscriptionActionPerformed
         FenConfirmationInscription f2 = new FenConfirmationInscription(this, true);
-        f2.init(cbxMatricule.getSelectedItem(), tInscription.getValueAt(tInscription.getSelectedRow(),0));
+        f2.init(id_client, tInscription.getValueAt(tInscription.getSelectedRow(),0));
         f2.setSize(400,300);
         f2.setVisible(true);
     }//GEN-LAST:event_btninscriptionActionPerformed
@@ -194,7 +220,7 @@ public class FenInscription extends javax.swing.JFrame
                 lblSelection.setText(tInscription.getValueAt(tInscription.getSelectedRow(), 0).toString());
                 int pos1 = jLabel3.getText().indexOf(":");
                 String nomPrenom = jLabel3.getText().substring(pos1 + 1);
-                btninscription.setText("Inscription à la session numéro " + tInscription.getValueAt(tInscription.getSelectedRow(), 0) + " pour " + nomPrenom);
+                btninscription.setText("Inscription à la session numéro " + tInscription.getValueAt(tInscription.getSelectedRow(), 0) + " pour " + cbxMatricule.getSelectedItem().toString());
                 btninscription.setVisible(true);
             }
         else
@@ -207,6 +233,12 @@ public class FenInscription extends javax.swing.JFrame
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         renseigne();
     }//GEN-LAST:event_formWindowActivated
+
+    private void btnRetourActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetourActionPerformed
+        FMenuPrincipal f1 = new FMenuPrincipal();
+        this.setVisible(false);
+        f1.setVisible(true);
+    }//GEN-LAST:event_btnRetourActionPerformed
     @Override
     public synchronized void addWindowListener(WindowListener l) 
         {
@@ -226,18 +258,18 @@ public class FenInscription extends javax.swing.JFrame
                                     tInscription.setValueAt(null,i,j);
                                 }
                         }
-                    if (cbxMatricule.getSelectedIndex()==-1) // Pas de client de choisi
+                    if (cbxMatricule.getSelectedIndex()==0||cbxMatricule.getSelectedIndex()==-1) // Pas de client de choisi
                         {
                             jLabel3.setText("ENSEMBLE DES SESSIONS");
                             // Toutes les sessions
-                            req = "SELECT * FROM viewdetailssessions n WHERE n.dateDebut > CURRENT_DATE";
+                            req = "SELECT * FROM viewdetailsession v WHERE v.date_debut > CURRENT_DATE";
                             // et date supérieure à la date du jour
                             btninscription.setVisible(false); // On rend le bouton inscription non visible
                         }
                     else
                         {
                             // Sélection des sessions "autorisées"
-                            req = "call sessions_autorisees('" + cbxMatricule.getSelectedIndex() + "')";
+                            req = "call sessions_autorisees('" + id_client + "')";
                             //Si la cellule sélectionnée est vide
                             if (tInscription.getValueAt(tInscription.getSelectedRow(), 0) != null) 
                                 {
@@ -255,7 +287,7 @@ public class FenInscription extends javax.swing.JFrame
                                 {
                                     if (k==0 && cbxMatricule.getSelectedIndex()!=-1)
                                         {
-                                            jLabel3.setText("Sessions autorisées pour : " + cbxMatricule.getSelectedItem().toString());
+                                            jLabel3.setText("Sessions autorisées pour : " + id_client);
                                         }
                                     // On calcule la marge et on renseigne la dernière colonne(7ème) du jTable
                                     req = "Select sum(taux_horaire) as revenu_session from statut st, session_formation s, client c, inscription i where s.id = i.session_formation_id and c.id = i.client_id and c.statut_id = st.id and s.id = " + rs2.getInt(1);
@@ -270,7 +302,7 @@ public class FenInscription extends javax.swing.JFrame
                                     tInscription.setValueAt(rs2.getObject(3), k, 3);
                                     tInscription.setValueAt(rs2.getInt(12), k, 4);
                                     tInscription.setValueAt(rs2.getInt(4), k, 5);
-                                    tInscription.setValueAt(rs2.getInt(3), k, 6);
+                                    tInscription.setValueAt(rs2.getInt(5), k, 6);
                                     k++;
                                 }
                             rs2.close();
@@ -291,6 +323,7 @@ public class FenInscription extends javax.swing.JFrame
      */
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnRetour;
     private javax.swing.JButton btninscription;
     private javax.swing.JComboBox cbxMatricule;
     private javax.swing.JLabel jLabel3;

@@ -13,7 +13,7 @@ import javax.swing.table.AbstractTableModel;
 public class  ModeleJTableListeSession extends AbstractTableModel
 {
 	private String[] columnNames = {"Numéro Session","Libellé Session","Niveau","Type","Description","Dîplome ?","Date Début","Durée","Nombre Place Restante","Marge actuelle"};
-	private Object[][] data=new Object[10][8];
+	private Object[][] data=new Object[10][10];
         @Override
 	public int getColumnCount()
 	{
@@ -45,6 +45,6 @@ public class  ModeleJTableListeSession extends AbstractTableModel
 	{
 		data[row][col] = value;
 		fireTableCellUpdated(row,col);
-		//fireTableDataChanged();
+		fireTableDataChanged();
 	}
 }
