@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package gestioninscription;
+package gestionsessions;
 
 /**
  *
@@ -12,8 +12,8 @@ import javax.swing.table.AbstractTableModel;
 
 public class  ModeleJTableListeSession extends AbstractTableModel
 {
-	private final String[] columnNames = {"Numéro Session","Libellé Session","Niveau","Date début","Durée","Nombre places","Nombre d'inscrits","Marge actuelle"};
-	private final Object[][] data=new Object[10][8];
+	private String[] columnNames = {"Numéro Session","Libellé Session","Niveau","Type","Description","Dîplome ?","Date Début","Durée","Nombre Place Restante","Marge actuelle"};
+	private Object[][] data=new Object[10][10];
         @Override
 	public int getColumnCount()
 	{
@@ -34,6 +34,7 @@ public class  ModeleJTableListeSession extends AbstractTableModel
 	{
 		return data[row][col];
 	}
+	
         @Override
 	public boolean isCellEditable(int row, int col)
 	{
@@ -44,6 +45,6 @@ public class  ModeleJTableListeSession extends AbstractTableModel
 	{
 		data[row][col] = value;
 		fireTableCellUpdated(row,col);
-		//fireTableDataChanged();
+		fireTableDataChanged();
 	}
 }
